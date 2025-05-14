@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>🎰 Caça-Níquel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+      background: #111;
+      color: white;
+    }
+
+    .slot-machine {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .reel {
+      width: 80px;
+      height: 80px;
+      font-size: 48px;
+      border: 4px solid #fff;
+      border-radius: 12px;
+      background-color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    button {
+      padding: 10px 25px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: #28a745;
+      border: none;
+      border-radius: 8px;
+      color: white;
+    }
+
+    #resultado {
+      font-size: 22px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎰 Caça-Níquel</h1>
+
+  <div class="slot-machine">
+    <div class="reel" id="reel1">🍒</div>
+    <div class="reel" id="reel2">🍋</div>
+    <div class="reel" id="reel3">💎</div>
+  </div>
+
+  <button onclick="girar()">Girar</button>
+  <div id="resultado">Boa sorte!</div>
+
+  <script>
+    const simbolos = ["🍒", "🍋", "💎", "🔔", "7️⃣", "🍉", "⭐"];
+
+    function getRandomSimbolo() {
+      return simbolos[Math.floor(Math.random() * simbolos.length)];
+    }
+
+    function girar() {
+      const reel1 = document.getElementById("reel1");
+      const reel2 = document.getElementById("reel2");
+      const reel3 = document.getElementById("reel3");
+      const resultado = document.getElementById("resultado");
+
+      // animação falsa de rotação com atraso
+      resultado.innerText = "Girando...";
+
+      let count = 0;
+      const interval = setInterval(() => {
+        reel1.innerText = getRandomSimbolo();
+        reel2.innerText = getRandomSimbolo();
+        reel3.innerText = getRandomSimbolo();
+        count++;
+        if (count > 10) {
+          clearInterval(interval);
+          const s1 = reel1.innerText;
+          const s2 = reel2.innerText;
+          const s3 = reel3.innerText;
+
+          if (s1 === s2 && s2 === s3) {
+            resultado.innerText = "🎉 Você ganhou!";
+          } else {
+            resultado.innerText = "Tente novamente!";
+          }
+        }
+      }, 100);
+    }
+  </script>
+
+</body>
+</html>

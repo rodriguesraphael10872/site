@@ -63,6 +63,7 @@
 
   <script>
     const simbolos = ["🍒", "🍋", "💎", "🔔", "7️⃣", "🍉", "⭐"];
+    let giroCount = 0;
 
     function getRandomSimbolo() {
       return simbolos[Math.floor(Math.random() * simbolos.length)];
@@ -75,6 +76,7 @@
       const resultado = document.getElementById("resultado");
 
       resultado.innerText = "Girando...";
+      giroCount++;
 
       let count = 0;
       const interval = setInterval(() => {
@@ -84,14 +86,23 @@
         count++;
         if (count > 10) {
           clearInterval(interval);
-          const s1 = reel1.innerText;
-          const s2 = reel2.innerText;
-          const s3 = reel3.innerText;
 
-          if (s1 === s2 && s2 === s3) {
+          // A cada 10 giros, força uma vitória
+          if (giroCount % 10 === 0) {
+            const premio = getRandomSimbolo();
+            reel1.innerText = premio;
+            reel2.innerText = premio;
+            reel3.innerText = premio;
             resultado.innerText = "🎉 Você ganhou!";
           } else {
-            resultado.innerText = "Tente novamente!";
+            const s1 = reel1.innerText;
+            const s2 = reel2.innerText;
+            const s3 = reel3.innerText;
+            if (s1 === s2 && s2 === s3) {
+              resultado.innerText = "🎉 Você ganhou!";
+            } else {
+              resultado.innerText = "Tente novamente!";
+            }
           }
         }
       }, 100);

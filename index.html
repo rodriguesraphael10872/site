@@ -2,21 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>🎰 Caça-Níquel</title>
+  <title>🎰 Mini Cassino</title>
   <style>
     body {
+      background: #111;
+      color: #fff;
       font-family: Arial, sans-serif;
       text-align: center;
       margin-top: 50px;
-      background: #111;
-      color: white;
     }
 
     .slot-machine {
       display: flex;
       justify-content: center;
       gap: 20px;
-      margin-bottom: 30px;
+      margin: 20px 0;
     }
 
     .reel {
@@ -29,7 +29,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.5s ease-in-out;
     }
 
     button {
@@ -40,43 +39,53 @@
       border: none;
       border-radius: 8px;
       color: white;
+      margin-top: 10px;
     }
 
-    #resultado {
-      font-size: 22px;
-      margin-top: 20px;
+    .info {
+      font-size: 20px;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🎰 Caça-Níquel</h1>
+  <h1>🎰 Mini Cassino</h1>
 
   <div class="slot-machine">
     <div class="reel" id="reel1">🍒</div>
-    <div class="reel" id="reel2">🍋</div>
-    <div class="reel" id="reel3">💎</div>
+    <div class="reel" id="reel2">💎</div>
+    <div class="reel" id="reel3">🍋</div>
   </div>
 
-  <button onclick="girar()">Girar</button>
-  <div id="resultado">Boa sorte!</div>
+  <div class="info">💰 Saldo: <span id="saldo">100</span> moedas</div>
+  <button onclick="jogar()">Girar (-10 moedas)</button>
+  <div class="info" id="mensagem">Boa sorte!</div>
 
   <script>
-    const simbolos = ["🍒", "🍋", "💎", "🔔", "7️⃣", "🍉", "⭐"];
-    let giroCount = 0;
+    const simbolos = ["🍒", "💎", "🍋", "🔔", "7️⃣", "⭐"];
+    let saldo = 100;
+    const aposta = 10;
+    const RTP = 0.95; // 95% de retorno esperado
 
     function getRandomSimbolo() {
       return simbolos[Math.floor(Math.random() * simbolos.length)];
     }
 
-    function girar() {
+    function jogar() {
+      const mensagem = document.getElementById("mensagem");
+      if (saldo < aposta) {
+        mensagem.innerText = "💸 Saldo insuficiente!";
+        return;
+      }
+
+      saldo -= aposta;
+      document.getElementById("saldo").innerText = saldo;
+
+      // Reels girando
       const reel1 = document.getElementById("reel1");
       const reel2 = document.getElementById("reel2");
       const reel3 = document.getElementById("reel3");
-      const resultado = document.getElementById("resultado");
-
-      resultado.innerText = "Girando...";
-      giroCount++;
 
       let count = 0;
       const interval = setInterval(() => {
@@ -87,25 +96,20 @@
         if (count > 10) {
           clearInterval(interval);
 
-          // A cada 10 giros, força uma vitória
-          if (giroCount % 10 === 0) {
-            const premio = getRandomSimbolo();
-            reel1.innerText = premio;
-            reel2.innerText = premio;
-            reel3.innerText = premio;
-            resultado.innerText = "🎉 Você ganhou!";
+          // Define se será uma rodada vencedora com base no RTP
+          const ganho = Math.random() < RTP;
+
+          if (ganho) {
+            // Simula prêmio aleatório entre 10 e 50
+            const premio = Math.floor(Math.random() * 5) * 10 + 10;
+            saldo += premio;
+            document.getElementById("saldo").innerText = saldo;
+            mensagem.innerText = `🎉 Você ganhou ${premio} moedas!`;
           } else {
-            const s1 = reel1.innerText;
-            const s2 = reel2.innerText;
-            const s3 = reel3.innerText;
-            if (s1 === s2 && s2 === s3) {
-              resultado.innerText = "🎉 Você ganhou!";
-            } else {
-              resultado.innerText = "Tente novamente!";
-            }
+            mensagem.innerText = "😢 Nenhum prêmio... tente de novo!";
           }
         }
-      }, 100);
+      }, 80);
     }
   </script>
 
